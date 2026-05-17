@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->longText('description');
             $table->string('location');
-            $table->enum('type', ['full-time', 'part-time', 'contract', 'internship'])->default('full-time');
+            $table->enum('type', ['Full-time', 'Hybrid', 'Contract', 'Remote'])->default('full-time');
             $table->decimal('salary', 15, 2)->nullable();
             $table->longText('required_skills')->nullable();
             $table->unsignedInteger('veiw_count')->default(0);
