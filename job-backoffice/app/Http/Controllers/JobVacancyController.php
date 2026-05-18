@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\JobVacancyCreateRequest;
+use App\Http\Requests\JobVacancyUpdateRequest;
+use App\Models\Company;
+use App\Models\JobCategory;
+use App\Models\JobVacancy;
 use Illuminate\Http\Request;
 
 class JobVacancyController extends Controller
@@ -9,9 +14,14 @@ class JobVacancyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('job_vacancy.index');
+        $query=JobVacancy::latest();
+        if (request()->has('archived')) {
+            $query->onlyTrashed();
+        }
+        $jobVacancies = $query->paginate(9)->onEachSide(1);
+        return view('job_vacancy.index', compact('jobVacancies'));
     }
 
     /**
@@ -19,15 +29,18 @@ class JobVacancyController extends Controller
      */
     public function create()
     {
-        //
+        $companies = Company::all();
+        $jobcategories = JobCategory::all();
+        return view('job_vacancy.create', compact('companies', 'jobcategories'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(JobVacancyCreateRequest $request)
     {
-        //
+        $jobVacancy = JobVacancy::create($request->validated());
+        return redirect()->route('job-vacancies.index')->with('success', 'Job vacancy created successfully.');
     }
 
     /**
@@ -35,7 +48,8 @@ class JobVacancyController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $jobVacancy = JobVacancy::findOrFail($id);
+        return view('job_vacancy.show', compact('jobVacancy'));
     }
 
     /**
@@ -43,15 +57,20 @@ class JobVacancyController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $jobVacancy = JobVacancy::findOrFail($id);
+        $companies = Company::all();
+        $jobcategories = JobCategory::all();
+        return view('job_vacancy.edit', compact('jobVacancy', 'companies', 'jobcategories'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(JobVacancyUpdateRequest $request, string $id)
     {
-        //
+        $jobVacancy = JobVacancy::findOrFail($id);
+        $jobVacancy->update($request->validated());
+        return redirect()->route('job-vacancies.index')->with('success', 'Job vacancy updated successfully.');
     }
 
     /**
@@ -59,6 +78,15 @@ class JobVacancyController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $jobVacancy = JobVacancy::findOrFail($id);
+        $jobVacancy->delete();
+        return redirect()->route('job-vacancies.index')->with('success', 'Job vacancy deleted successfully.');
+    }
+
+    public function restore(string $id)
+    {
+        $jobVacancy = JobVacancy::onlyTrashed()->findOrFail($id);
+        $jobVacancy->restore();
+        return redirect()->route('job-vacancies.index')->with('success', 'Job vacancy restored successfully.');
     }
 }

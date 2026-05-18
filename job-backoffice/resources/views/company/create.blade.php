@@ -35,7 +35,8 @@
                                 <label>Company Name</label>
                                 <input type="text" name="name"
                                        value="{{ old('name') }}"
-                                       class="w-full mt-1 border rounded-lg p-2">
+                                       class="w-full mt-1 border rounded-lg p-2
+                                       @error('name') border-red-500 @enderror">
 
                                 @error('name')
                                     <p class="text-red-600 text-sm">{{ $message }}</p>
@@ -45,7 +46,9 @@
                             {{-- INDUSTRY --}}
                             <div>
                                 <label>Industry</label>
-                                <select name="industry" class="w-full mt-1 border rounded-lg p-2">
+                                <select name="industry"
+                                        class="w-full mt-1 border rounded-lg p-2
+                                        @error('industry') border-red-500 @enderror">
 
                                     <option value="">Select Industry</option>
 
@@ -68,7 +71,8 @@
                                 <label>Address</label>
                                 <input type="text" name="address"
                                        value="{{ old('address') }}"
-                                       class="w-full mt-1 border rounded-lg p-2">
+                                       class="w-full mt-1 border rounded-lg p-2
+                                       @error('address') border-red-500 @enderror">
 
                                 @error('address')
                                     <p class="text-red-600 text-sm">{{ $message }}</p>
@@ -80,7 +84,8 @@
                                 <label>Website (Optional)</label>
                                 <input type="url" name="website"
                                        value="{{ old('website') }}"
-                                       class="w-full mt-1 border rounded-lg p-2">
+                                       class="w-full mt-1 border rounded-lg p-2
+                                       @error('website') border-red-500 @enderror">
 
                                 @error('website')
                                     <p class="text-red-600 text-sm">{{ $message }}</p>
@@ -101,7 +106,8 @@
                                 <label>Owner Name</label>
                                 <input type="text" name="owner_name"
                                        value="{{ old('owner_name') }}"
-                                       class="w-full mt-1 border rounded-lg p-2">
+                                       class="w-full mt-1 border rounded-lg p-2
+                                       @error('owner_name') border-red-500 @enderror">
 
                                 @error('owner_name')
                                     <p class="text-red-600 text-sm">{{ $message }}</p>
@@ -113,21 +119,23 @@
                                 <label>Owner Email</label>
                                 <input type="email" name="owner_email"
                                        value="{{ old('owner_email') }}"
-                                       class="w-full mt-1 border rounded-lg p-2">
+                                       class="w-full mt-1 border rounded-lg p-2
+                                       @error('owner_email') border-red-500 @enderror">
 
                                 @error('owner_email')
                                     <p class="text-red-600 text-sm">{{ $message }}</p>
                                 @enderror
                             </div>
 
-                            {{-- OWNER PASSWORD WITH EYE ICON --}}
+                            {{-- OWNER PASSWORD --}}
                             <div class="md:col-span-2" x-data="{ show: false }">
                                 <label>Owner Password</label>
 
                                 <div class="relative mt-1">
                                     <input :type="show ? 'text' : 'password'"
                                            name="owner_password"
-                                           class="w-full border rounded-lg p-2 pr-10">
+                                           class="w-full border rounded-lg p-2 pr-10
+                                           @error('owner_password') border-red-500 @enderror">
 
                                     <button type="button"
                                             @click="show = !show"

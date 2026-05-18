@@ -14,7 +14,7 @@ class CompanyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $query=Company::latest();
         if (request()->has('archived')) {
