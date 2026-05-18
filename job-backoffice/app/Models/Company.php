@@ -36,4 +36,8 @@ class Company extends Model
     {
         return $this->hasMany(JobVacancy::class, 'companyId', 'id'); // Assuming 'id' is the primary key in the companies table
     }
+    public function jobApplications()
+    {
+        return $this->hasManyThrough(JobApplication::class, JobVacancy::class, 'companyId', 'jobId', 'id', 'id'); // Assuming 'id' is the primary key in the companies table and 'jobId' is the foreign key in the job_applications table
+    }
 }

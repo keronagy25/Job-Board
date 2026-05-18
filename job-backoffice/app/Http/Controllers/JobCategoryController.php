@@ -37,7 +37,7 @@ class JobCategoryController extends Controller
     public function store(JobCategoryCreateRequest $request)
     {
         JobCategory::create($request->validated());
-        return redirect()->route('job-categories.index')->with('success', 'Job category created successfully!.');
+        return redirect()->route('job-category.index')->with('success', 'Job category created successfully!.');
     }
 
     /**
@@ -64,7 +64,7 @@ class JobCategoryController extends Controller
     {
         $jobCategory = JobCategory::findOrFail($id);
         $jobCategory->update($request->validated());
-        return redirect()->route('job-categories.index')->with('success', 'Job category updated successfully!.');
+        return redirect()->route('job-category.index')->with('success', 'Job category updated successfully!.');
     }
 
     /**
@@ -74,13 +74,13 @@ class JobCategoryController extends Controller
     {
         $jobCategory = JobCategory::findOrFail($id);
         $jobCategory->delete();
-        return redirect()->route('job-categories.index')->with('success', 'Job category archived successfully!.');
+        return redirect()->route('job-category.index')->with('success', 'Job category archived successfully!.');
     }
 
     public function restore(string $id)
     {
         $jobCategory = JobCategory::onlyTrashed()->findOrFail($id);
         $jobCategory->restore();
-        return redirect()->route('job-categories.index',['archived'=>'true'])->with('success', 'Job category restored successfully!.');
+        return redirect()->route('job-category.index',['archived'=>'true'])->with('success', 'Job category restored successfully!.');
     }
 }
