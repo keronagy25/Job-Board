@@ -1,9 +1,15 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-gray-800">
-            {{ __('Edit Job Category') }}
-        </h2>
+        <div class="flex items-center justify-between">
+            <h2 class="font-bold text-2xl text-gray-800">
+                {{ __('Edit Job Category') }}
+            </h2>
+            <a href="{{ route('job-categories.index') }}"
+               class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
+                Cancel
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-10 bg-gray-100 min-h-screen">
@@ -53,18 +59,11 @@
                         </div>
 
                         <!-- Buttons -->
-                        <div class="flex items-center justify-between">
-
-                            <a href="{{ route('job-categories.index') }}"
-                               class="px-5 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">
-                                Cancel
-                            </a>
-
+                        <div class="flex items-center justify-end">
                             <button type="submit"
-                                    class="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
+                                    class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                                 Update Category
                             </button>
-
                         </div>
 
                     </form>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JobApplication;
 use Illuminate\Http\Request;
 
 class JobApplicationController extends Controller
@@ -9,25 +10,14 @@ class JobApplicationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('job_application.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        $query=JobApplication::latest();
+        if (request()->has('archived')) {
+            $query->onlyTrashed();
+        }
+        $jobApplications = $query->paginate(9)->onEachSide(1);
+        return view('job_application.index', compact('jobApplications'));
     }
 
     /**
@@ -35,7 +25,8 @@ class JobApplicationController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $jobApplication = JobApplication::findOrFail($id);
+        return view('job_application.show', compact('jobApplication'));
     }
 
     /**
@@ -43,7 +34,8 @@ class JobApplicationController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $jobApplication = JobApplication::findOrFail($id);
+        return view('job_application.edit', compact('jobApplication'));
     }
 
     /**
@@ -51,7 +43,14 @@ class JobApplicationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $jobApplication = JobApplication::findOrFail($id);
+        $validatedData = $request->validate([
+            'status' => 'required|in:pending,accepted,rejected',
+        ]);
+        $jobApplication->update([
+            'status' => $validatedData['status'],
+        ]);
+        return redirect()->route('job-applications.index')->with('success', 'Job application updated successfully.');
     }
 
     /**
@@ -59,6 +58,17 @@ class JobApplicationController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $jobApplication = JobApplication::findOrFail($id);
+        $jobApplication->delete();
+        return redirect()->route('job-applications.index')->with('success', 'Job application archived successfully.');
+    }
+    public function restore(string $id)
+    {
+        $jobApplication = JobApplication::withTrashed()->findOrFail($id);
+        if ($jobApplication->trashed()) {
+            $jobApplication->restore();
+            return redirect()->route('job-applications.index')->with('success', 'Job application restored successfully.');
+        }
+        return redirect()->route('job-applications.index')->with('info', 'Job application is not archived.');
     }
 }
