@@ -12,10 +12,19 @@ class JobApplicationController extends Controller
      */
     public function index(Request $request)
     {
-        $query=JobApplication::latest();
+        $query = JobApplication::latest();
+
+        if (auth()->user()->role == 'company-owner') {
+            $company = auth()->user()->companies;
+            $query->whereHas('jobVacancy', function ($q) use ($company) {
+                $q->where('companyId', $company->id); // company's own ID
+            });
+        }
+
         if (request()->has('archived')) {
             $query->onlyTrashed();
         }
+
         $jobApplications = $query->paginate(9)->onEachSide(1);
         return view('job_application.index', compact('jobApplications'));
     }

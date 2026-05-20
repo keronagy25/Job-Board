@@ -48,6 +48,9 @@
                 <tr>
                     <th class="px-6 py-4 text-left">Applicant</th>
                     <th class="px-6 py-4 text-left">Job</th>
+                    @if(auth()->user()->role =='admin')
+                    <th class="px-6 py-4 text-left">Company</th>
+                    @endif
                     <th class="px-6 py-4 text-left">Status</th>
                     <th class="px-6 py-4 text-left">AI Score</th>
                     <th class="px-6 py-4 text-left">Actions</th>
@@ -66,8 +69,12 @@
 
                     <td class="px-6 py-4">
                         {{ $application->jobVacancy->title ?? 'N/A' }}
+                   @if(auth()->user()->role =='admin')
                     </td>
-
+                        <td class="px-6 py-4">
+                        {{ $application->jobVacancy->company->name ?? 'N/A' }}
+                    </td>
+                    @endif
                     <td class="px-6 py-4">
                         <span class="px-3 py-1 rounded-full text-sm font-medium
                             @if($application->status === 'accepted')

@@ -1,3 +1,11 @@
+@php
+    if (auth()->user()->role == 'admin') {
+        $formAction = route('companies.update', $company->id);
+    } else if (auth()->user()->role == 'company-owner') {
+        $formAction = route('my-company.update');
+    }
+@endphp
+
 <x-app-layout>
 
     <x-slot name="header">
@@ -6,12 +14,18 @@
             <h2 class="font-bold text-2xl text-gray-800">
                 Edit Company: {{ $company->name }}
             </h2>
-
+            @if (auth()->user()->role == 'admin')
             <a href="{{ route('companies.index') }}"
                class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
                 Back
             </a>
-
+             @endif
+             @if(auth()->user()->role == 'company-owner')
+            <a href="{{ route('my-company.show') }}"
+               class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
+                Back
+            </a>         
+            @endif
         </div>
     </x-slot>
 
@@ -21,7 +35,7 @@
 
             <div class="bg-white shadow-lg rounded-2xl p-8">
 
-                <form action="{{ route('companies.update', $company->id) }}"
+                <form action="{{ $formAction }}"
                       method="POST"
                       class="space-y-8">
 

@@ -5,10 +5,12 @@
             <h2 class="font-bold text-2xl text-gray-800">
                 {{ $company->name }}
             </h2>
+            @if(auth()->user()->role == 'admin')
             <a href="{{ route('companies.index') }}"
                class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
                 Back
             </a>
+            @endif
         </div>
     </x-slot>
 
@@ -49,6 +51,10 @@
                             <p class="mt-2 text-gray-700">{{ $company->owner->name }}</p>
                         </div>
                         <div>
+                            <p class="text-sm font-semibold text-gray-400 uppercase">Industry</p>
+                            <p class="mt-2 text-gray-700">{{ $company->industry }}</p>
+                        </div>
+                        <div>
                             <p class="text-sm font-semibold text-gray-400 uppercase">Created At</p>
                             <p class="mt-2 text-gray-700">{{ $company->created_at->format('d M Y') }}</p>
                         </div>
@@ -57,10 +63,18 @@
                     <!-- ACTIONS - RIGHT ALIGNED -->
                     @if (!$company->trashed())
                         <div class="mt-10 flex justify-end gap-4 border-t pt-6">
-                            <a href="{{ route('companies.edit', $company->id) }}"
-                               class="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
-                                Edit Company
-                            </a>
+                            @if (auth()->user()->role == 'admin')
+                                <a href="{{ route('companies.edit', $company->id) }}"
+                                class="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
+                                    Edit Company
+                                </a>
+                            @else
+                                <a href="{{ route('my-company.edit') }}"
+                                class="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
+                                    Edit Company
+                                </a>
+                            @endif
+                            @if(auth()->user()->role== 'admin')
                             <form action="{{ route('companies.destroy', $company->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
@@ -69,10 +83,12 @@
                                     Archive
                                 </button>
                             </form>
+                            @endif
                         </div>
                     @endif
                 </div>
 
+                @if (auth()->user()->role == 'admin')
                 <!-- TABS SECTION -->
                 <div x-data="{ tab: 'jobs' }" class="p-8 border-t">
                     <div class="flex gap-10 border-b mb-6">
@@ -160,6 +176,7 @@
                         </table>
                     </div>
                 </div>
+                @endif
 
             </div>
         </div>

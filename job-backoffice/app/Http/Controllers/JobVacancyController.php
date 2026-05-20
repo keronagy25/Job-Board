@@ -17,6 +17,10 @@ class JobVacancyController extends Controller
     public function index(Request $request)
     {
         $query=JobVacancy::latest();
+        if (auth()->user()->role == 'company-owner') {
+            $company = auth()->user()->companies;
+            $query->where('companyId', $company->id); // company's own ID
+        }
         if (request()->has('archived')) {
             $query->onlyTrashed();
         }
@@ -29,7 +33,7 @@ class JobVacancyController extends Controller
      */
     public function create()
     {
-        $companies = Company::all();
+        $companies = auth()->user()->role == 'admin' ? Company::all() : collect();
         $jobcategories = JobCategory::all();
         return view('job_vacancy.create', compact('companies', 'jobcategories'));
     }

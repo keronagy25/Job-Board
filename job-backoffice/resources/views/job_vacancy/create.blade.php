@@ -102,20 +102,29 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Company</label>
 
-                                <select name="companyId"
-                                    class="mt-1 w-full border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500
-                                    @error('companyId') border-red-500 @else border-gray-300 @enderror">
+                                @if (auth()->user()->role == 'admin')
+                                    <select name="companyId"
+                                        class="mt-1 w-full border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500
+                                        @error('companyId') border-red-500 @else border-gray-300 @enderror">
 
-                                    <option value="">Select Company</option>
+                                        <option value="">Select Company</option>
 
-                                    @foreach ($companies as $company)
-                                        <option value="{{ $company->id }}"
-                                            {{ old('companyId') == $company->id ? 'selected' : '' }}>
-                                            {{ $company->name }}
-                                        </option>
-                                    @endforeach
+                                        @foreach ($companies as $company)
+                                            <option value="{{ $company->id }}"
+                                                {{ old('companyId') == $company->id ? 'selected' : '' }}>
+                                                {{ $company->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
 
-                                </select>
+                                @else
+                                    {{-- Display only, not submitted --}}
+                                    <input type="text" value="{{ auth()->user()->companies->name }}" disabled
+                                        class="mt-1 w-full border rounded-lg shadow-sm bg-gray-100 cursor-not-allowed border-gray-300">
+
+                                    {{-- This is what actually gets submitted --}}
+                                    <input type="hidden" name="companyId" value="{{ auth()->user()->companies->id }}">
+                                @endif
 
                                 @error('companyId')
                                     <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
